@@ -137,3 +137,41 @@ random_ seed 0
 
 “0.txt”：one-line-art, faces,side view
 “1.txt”：one-line-art,a face,
+### 步骤3：注释图像并将文本文件保存到“text”文件夹中
+打开在步骤1中创建的“text”文件夹，创建空文本文件，并同样重命名为从0开始的数字，如“0.txt”、“1.txt”等等。“[x].txt”中的文本就是与图像“[x].image”对应的注释（文本提示），其中[x]是你重命名的数字/索引。然后可以在文本文件中注释在步骤2中下载的图像。
+
+在我们的示例中，由于训练图像都是“单线艺术”绘图，所以可以在所有文本文件中都写入“one-line-art”，还可以添加每张图像的一些特征描述，如为“1.jpeg”添加“side view”，为“3.jpeg”添加“closed eyes”。文本文件及其内容如下所示：
+| 名称 | 日期修改 | 类型 | 大小 |
+| --- | --- | --- | --- |
+| 0.txt | 16/2/2025 11:28 pm | 文本文档 | 1 KB |
+| 1.txt | 16/2/2025 11:29 pm | 文本文档 | 1 KB |
+| 2.txt | 16/2/2025 11:29 pm | 文本文档 | 1 KB |
+| 3.txt | 16/2/2025 11:29 pm | 文本文档 | 1 KB |
+
+0.txt：one-line-art, faces,side view
+1.txt：one-line-art,a face,side view
+2.txt：one-line-art,head,back
+3.txt：one-line-art, face,front view,closed eyes
+
+有时当训练图像过多时，也可以使用图像字幕网络自动注释图像，方法多样。比如，可使用自定义节点“Image_Captioning_in_ComfyUI”调用WD Tagger网络，或运行ComfyUI MoonDream Caption工作流程，利用视觉语言模型MoonDream进行注释。
+### 步骤4：运行SimpleLoRA节点，用自定义数据集对基础模型进行LoRA微调
+使用“LoRATrainer”节点构建仅含一个节点的LoRA训练工作流程。将“use_custom_dataset”设为“true”，并把数据集根文件夹路径作为“dataset_path”。在示例中，“dataset_path”应为“D:\one-line-art”。由于数据集中仅有4张图像，为避免过拟合，无需训练太多步骤，例如，可将“training_steps”和“checkpointing_steps”分别设为64和16。示例中设置恰当的LoRATrainer如下：
+```
+#13 SimpleLoRA
+LoRATrainer
+ckpt_name DreamShaper_8_pruned.safetensors
+use_custom_dataset true
+dataset_path D:/one-line-art
+lora_checkpointfolder one-line-art
+lora_name one-line-art_lora
+caption_column text
+learning_rate 0.00010
+batch_size 1
+training_steps 64
+checkpointing_steps 16
+rank 4
+random_seed 0
+```
+训练完成后，可将LoRA应用到基础网络，在正向文本提示中输入“one-line-art, face, side view”查看结果。左边图像由应用LoRA后生成，右边则未应用。对比可知，训练好的LoRA确实有效。
+### 最终提交
+请将ComfyUI工作流程、微调后的LoRA权重以及微调模型生成的10张输出图像打包成一个zip文件提交。请务必包含一个提示文本文件，其中记录生成这10张提交图像所使用的10个提示词。 
