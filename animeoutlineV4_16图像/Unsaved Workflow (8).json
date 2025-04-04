@@ -1,0 +1,51 @@
+{
+  "last_node_id": 11,
+  "last_link_id": 9,
+  "nodes": [
+    {
+      "id": 11,
+      "type": "LoRATrainer",
+      "pos": [
+        605,
+        304
+      ],
+      "size": {
+        "0": 315,
+        "1": 322
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "properties": {
+        "Node name for S&R": "LoRATrainer"
+      },
+      "widgets_values": [
+        "DreamShaper_8_pruned.safetensors",
+        true,
+        "D:/one-line-art",
+        "one-line-art",
+        "my_lora",
+        "one-line-art_lora",
+        0.0001,
+        1,
+        64,
+        16,
+        4,
+        0
+      ]
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.2100000000000002,
+      "offset": [
+        -194.46323450032696,
+        -241.23255177070925
+      ]
+    }
+  },
+  "version": 0.4
+}
